@@ -17,7 +17,7 @@ public class ModEntities {
             () -> EntityType.Builder.<TornadoEntity>of(TornadoEntity::new, MobCategory.MISC)
                     .sized(0.1F, 0.1F)
                     .clientTrackingRange(96)
-                    .updateInterval(1)
+                    .updateInterval(2)
                     .build(new ResourceLocation(Vfx_test_for_cultivatereg.MODID, "fire_tornado").toString())
     );
 

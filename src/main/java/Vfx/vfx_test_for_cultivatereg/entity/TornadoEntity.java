@@ -131,19 +131,19 @@ public class TornadoEntity extends Entity {
         return Math.max(min, Math.min(max, value));
     }
 
-    private float getRadius() {
+    public float getRadius() {
         return this.entityData.get(DATA_RADIUS);
     }
 
-    private float getHeight() {
+    public float getHeight() {
         return this.entityData.get(DATA_HEIGHT);
     }
 
-    private int getLifetime() {
+    public int getLifetime() {
         return this.entityData.get(DATA_LIFETIME);
     }
 
-    private float getAngularSpeed() {
+    public float getAngularSpeed() {
         return this.entityData.get(DATA_SPEED);
     }
 

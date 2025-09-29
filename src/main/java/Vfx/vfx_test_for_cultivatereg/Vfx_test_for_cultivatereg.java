@@ -6,8 +6,8 @@ import net.minecraft.world.food.FoodProperties;
 import Vfx.vfx_test_for_cultivatereg.entity.ModEntities;
 import Vfx.vfx_test_for_cultivatereg.item.FirePowersItem;
 import Vfx.vfx_test_for_cultivatereg.network.ModNetwork;
+import Vfx.vfx_test_for_cultivatereg.client.render.TornadoRenderer;
 import net.minecraft.client.renderer.entity.EntityRenderers;
-import net.minecraft.client.renderer.entity.NoopRenderer;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
@@ -112,7 +112,7 @@ public class Vfx_test_for_cultivatereg {
 
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
-            event.enqueueWork(() -> EntityRenderers.register(ModEntities.FIRE_TORNADO.get(), NoopRenderer::new));
+            event.enqueueWork(() -> EntityRenderers.register(ModEntities.FIRE_TORNADO.get(), TornadoRenderer::new));
         }
     }
 }
