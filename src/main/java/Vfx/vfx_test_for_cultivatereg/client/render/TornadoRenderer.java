@@ -62,7 +62,7 @@ public class TornadoRenderer extends EntityRenderer<TornadoEntity> {
         VertexConsumer consumer = buffer.getBuffer(renderType);
         PoseStack.Pose pose = poseStack.last();
 
-        float ribbonHalf = 0.45F * widthScale;
+        float ribbonHalf = 25F * widthScale;
 
         for (int i = 0; i < verticalSegments; i++) {
             float v0 = i / (float) verticalSegments;
