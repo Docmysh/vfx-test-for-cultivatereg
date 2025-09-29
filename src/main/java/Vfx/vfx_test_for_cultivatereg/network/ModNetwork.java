@@ -4,7 +4,7 @@ import Vfx.vfx_test_for_cultivatereg.Vfx_test_for_cultivatereg;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkRegistry;
-import net.minecraftforge.network.SimpleChannel;
+import net.minecraftforge.network.simple.SimpleChannel;
 
 public class ModNetwork {
     private static final String PROTOCOL_VERSION = "1";

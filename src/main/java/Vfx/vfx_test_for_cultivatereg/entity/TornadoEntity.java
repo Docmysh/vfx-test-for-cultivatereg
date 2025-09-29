@@ -4,6 +4,7 @@ import Vfx.vfx_test_for_cultivatereg.network.ModNetwork;
 import Vfx.vfx_test_for_cultivatereg.network.SpawnTornadoParticlesPacket;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -169,12 +170,9 @@ public class TornadoEntity extends Entity {
     }
 
     @Override
-    public @NotNull Packet<?> getAddEntityPacket() {
+    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
-    @Override
-    protected void positionRider(@NotNull Entity passenger) {
-        // No riders.
-    }
+
 }
