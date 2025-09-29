@@ -1,0 +1,12 @@
+{
+  "item.vfx_test_for_cultivatereg.fire_powers": "Fire Powers",
+  "item.vfx_test_for_cultivatereg.fire_powers.unlocked": "You feel fire dancing at your fingertips.",
+  "item.vfx_test_for_cultivatereg.fire_powers.already": "The fire already answers your call.",
+  "key.categories.vfx_test_for_cultivatereg.fire": "Fire Powers",
+  "key.vfx_test_for_cultivatereg.fire.z": "Fire Ability (Z)",
+  "key.vfx_test_for_cultivatereg.fire.x": "Fire Ability (X)",
+  "key.vfx_test_for_cultivatereg.fire.c": "Fire Tornado",
+  "key.vfx_test_for_cultivatereg.fire.v": "Fire Ability (V)",
+  "message.vfx_test_for_cultivatereg.fire_powers.cooldown": "Your flames need a moment to gather.",
+  "message.vfx_test_for_cultivatereg.fire_powers.locked": "You must awaken your fire powers first!"
+}
