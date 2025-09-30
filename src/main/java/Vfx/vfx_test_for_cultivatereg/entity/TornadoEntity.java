@@ -1,7 +1,5 @@
 package Vfx.vfx_test_for_cultivatereg.entity;
 
-import Vfx.vfx_test_for_cultivatereg.network.ModNetwork;
-import Vfx.vfx_test_for_cultivatereg.network.SpawnTornadoParticlesPacket;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.CommandFunction;
 import net.minecraft.nbt.CompoundTag;
@@ -22,7 +20,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -112,8 +109,7 @@ public class TornadoEntity extends Entity {
         MinecraftServer server = serverLevel.getServer();
         ServerFunctionManager functionManager = server.getFunctions();
         functionManager.get(TORNADO_ANIMATION_FUNCTION)
-                .ifPresentOrElse(function -> executeAnimation(functionManager, function),
-                        () -> spawnLegacyParticles());
+                .ifPresent(function -> executeAnimation(functionManager, function));
     }
 
     private void executeAnimation(ServerFunctionManager functionManager, CommandFunction function) {
@@ -124,15 +120,6 @@ public class TornadoEntity extends Entity {
         functionManager.execute(function, source);
     }
 
-    private void spawnLegacyParticles() {
-        if (this.tickCount % 2 != 0) {
-            return;
-        }
-        ModNetwork.CHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
-                new SpawnTornadoParticlesPacket(this.getX(), this.getY(), this.getZ(),
-                        this.getRadius(), this.getHeight(), this.getAngularSpeed(),
-                        4, this.tickCount));
-    }
 
     private boolean canAffect(LivingEntity entity) {
         if (!entity.isAlive()) {

@@ -25,8 +25,5 @@ public class ModNetwork {
         CHANNEL.registerMessage(packetId++, UseFireAbilityPacket.class,
                 UseFireAbilityPacket::encode, UseFireAbilityPacket::decode,
                 UseFireAbilityPacket::handle, Optional.of(NetworkDirection.PLAY_TO_SERVER));
-        CHANNEL.registerMessage(packetId++, SpawnTornadoParticlesPacket.class,
-                SpawnTornadoParticlesPacket::encode, SpawnTornadoParticlesPacket::decode,
-                SpawnTornadoParticlesPacket::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
     }
 }
