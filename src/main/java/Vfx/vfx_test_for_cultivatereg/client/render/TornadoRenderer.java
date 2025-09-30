@@ -51,13 +51,12 @@ public class TornadoRenderer extends EntityRenderer<TornadoEntity> {
         }
         this.lastParticleTick.put(entity.getId(), currentTick);
 
-        if (currentTick % 2 != 0) {
-            return;
-        }
-
         RandomSource random = RandomSource.create(entity.getId() * 3129871L + currentTick);
-        double time = level.getGameTime() + partialTicks;
-        double rotation = (entity.getId() * 0.15D) + time * entity.getAngularSpeed() * 0.25D;
+        float radius = entity.getRadius();
+        float height = entity.getHeight();
+        double yawRadians = Math.toRadians(entity.getViewYRot(partialTicks));
+        double spinRadians = (entity.tickCount + partialTicks) * entity.getAngularSpeed();
+        double rotation = yawRadians + spinRadians + entity.getId() * 0.2617993877991494D;
 
         float distanceFade = 1.0F;
         if (minecraft.player != null) {
@@ -65,43 +64,12 @@ public class TornadoRenderer extends EntityRenderer<TornadoEntity> {
             distanceFade = Mth.clamp(1.0F - distance / 512.0F, 0.35F, 1.0F);
         }
 
-        float radius = entity.getRadius();
-        float height = entity.getHeight();
-
         for (TornadoShape.TornadoPoint point : TornadoShape.POINTS) {
             Vec3 world = TornadoShape.toWorld(point, entity.getX(), entity.getY(), entity.getZ(), radius, height, rotation);
-            double upwardSpeed = 0.008D + random.nextDouble() * 0.02D;
-            double spread = 0.0025D * distanceFade;
+            double upwardSpeed = 0.01D + random.nextDouble() * 0.015D;
+            double lateralDrift = (random.nextDouble() - 0.5D) * 0.0025D * distanceFade;
             level.addParticle(ParticleTypes.FLAME, world.x, world.y, world.z,
-                    (random.nextDouble() - 0.5D) * spread, upwardSpeed,
-                    (random.nextDouble() - 0.5D) * spread);
-            if (random.nextFloat() < 0.35F) {
-                level.addParticle(ParticleTypes.SMALL_FLAME, world.x, world.y, world.z,
-                        0.0D, upwardSpeed * 0.6D, 0.0D);
-            }
-            if (random.nextFloat() < 0.25F) {
-                level.addParticle(ParticleTypes.ASH, world.x, world.y, world.z,
-                        0.0D, 0.002D + random.nextDouble() * 0.01D, 0.0D);
-            }
-        }
-
-        int emberCount = Mth.ceil(30 * distanceFade);
-        for (int i = 0; i < emberCount; i++) {
-            double offsetX = (random.nextDouble() * 2 - 1) * (radius * 0.35D);
-            double offsetZ = (random.nextDouble() * 2 - 1) * (radius * 0.35D);
-            double y = entity.getY() + random.nextDouble() * height;
-            level.addParticle(ParticleTypes.LAVA, entity.getX() + offsetX, y, entity.getZ() + offsetZ,
-                    0.0D, 0.035D + random.nextDouble() * 0.015D, 0.0D);
-        }
-
-        int smokeCount = Mth.ceil(18 * distanceFade);
-        for (int i = 0; i < smokeCount; i++) {
-            double angle = random.nextDouble() * Math.PI * 2;
-            double distance = radius * (0.65D + 0.45D * random.nextDouble());
-            level.addParticle(ParticleTypes.CAMPFIRE_COSY_SMOKE,
-                    entity.getX() + distance * Math.cos(angle), entity.getY() + height,
-                    entity.getZ() + distance * Math.sin(angle),
-                    0.0D, 0.02D + random.nextDouble() * 0.02D, 0.0D);
+                    lateralDrift, upwardSpeed, lateralDrift);
         }
     }
 

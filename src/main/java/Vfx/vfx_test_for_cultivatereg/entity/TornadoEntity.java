@@ -165,6 +165,15 @@ public class TornadoEntity extends Entity {
     }
 
     @Override
+    public boolean shouldRenderAtSqrDistance(double distance) {
+        if (super.shouldRenderAtSqrDistance(distance)) {
+            return true;
+        }
+        double range = Math.max(160.0D, Math.max(this.getRadius() * 32.0D, this.getHeight() * 8.0D));
+        return distance < range * range;
+    }
+
+    @Override
     protected void readAdditionalSaveData(@NotNull CompoundTag tag) {
         this.entityData.set(DATA_RADIUS, tag.getFloat("Radius"));
         this.entityData.set(DATA_HEIGHT, tag.getFloat("Height"));
