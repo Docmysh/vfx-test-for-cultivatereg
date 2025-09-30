@@ -2,6 +2,8 @@ package Vfx.vfx_test_for_cultivatereg.entity;
 
 import Vfx.vfx_test_for_cultivatereg.network.ModNetwork;
 import Vfx.vfx_test_for_cultivatereg.network.SpawnTornadoParticlesPacket;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.functions.CommandFunction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -9,15 +11,19 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.ServerFunctionManager;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,6 +34,7 @@ public class TornadoEntity extends Entity {
     private static final EntityDataAccessor<Float> DATA_HEIGHT = SynchedEntityData.defineId(TornadoEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Integer> DATA_LIFETIME = SynchedEntityData.defineId(TornadoEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Float> DATA_SPEED = SynchedEntityData.defineId(TornadoEntity.class, EntityDataSerializers.FLOAT);
+    private static final ResourceLocation TORNADO_ANIMATION_FUNCTION = new ResourceLocation("test", "demo/l0/l0_0");
 
     private UUID ownerUUID;
     private LivingEntity cachedOwner;
@@ -62,11 +69,8 @@ public class TornadoEntity extends Entity {
         super.tick();
         if (!this.level().isClientSide) {
             this.applyForces();
-            if (this.tickCount % 2 == 0) {
-                ModNetwork.CHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
-                        new SpawnTornadoParticlesPacket(this.getX(), this.getY(), this.getZ(),
-                                this.getRadius(), this.getHeight(), this.getAngularSpeed(),
-                                4, this.tickCount));
+            if (this.level() instanceof ServerLevel serverLevel) {
+                this.runAnimationFunction(serverLevel);
             }
         }
 
@@ -102,6 +106,32 @@ public class TornadoEntity extends Entity {
                 entity.hurt(damageSource, 1.0F);
             }
         }
+    }
+
+    private void runAnimationFunction(ServerLevel serverLevel) {
+        MinecraftServer server = serverLevel.getServer();
+        ServerFunctionManager functionManager = server.getFunctions();
+        functionManager.get(TORNADO_ANIMATION_FUNCTION)
+                .ifPresentOrElse(function -> executeAnimation(functionManager, function),
+                        () -> spawnLegacyParticles());
+    }
+
+    private void executeAnimation(ServerFunctionManager functionManager, CommandFunction<CommandSourceStack> function) {
+        CommandSourceStack source = this.createCommandSourceStack()
+                .withSuppressedOutput()
+                .withPermission(2)
+                .withRotation(Vec2.ZERO);
+        functionManager.execute(function, source);
+    }
+
+    private void spawnLegacyParticles() {
+        if (this.tickCount % 2 != 0) {
+            return;
+        }
+        ModNetwork.CHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
+                new SpawnTornadoParticlesPacket(this.getX(), this.getY(), this.getZ(),
+                        this.getRadius(), this.getHeight(), this.getAngularSpeed(),
+                        4, this.tickCount));
     }
 
     private boolean canAffect(LivingEntity entity) {
