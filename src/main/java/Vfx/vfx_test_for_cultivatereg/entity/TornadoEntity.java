@@ -3,7 +3,7 @@ package Vfx.vfx_test_for_cultivatereg.entity;
 import Vfx.vfx_test_for_cultivatereg.network.ModNetwork;
 import Vfx.vfx_test_for_cultivatereg.network.SpawnTornadoParticlesPacket;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.commands.functions.CommandFunction;
+import net.minecraft.commands.CommandFunction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -116,7 +116,7 @@ public class TornadoEntity extends Entity {
                         () -> spawnLegacyParticles());
     }
 
-    private void executeAnimation(ServerFunctionManager functionManager, CommandFunction<CommandSourceStack> function) {
+    private void executeAnimation(ServerFunctionManager functionManager, CommandFunction function) {
         CommandSourceStack source = this.createCommandSourceStack()
                 .withSuppressedOutput()
                 .withPermission(2)
